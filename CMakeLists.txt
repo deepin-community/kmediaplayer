@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 
-set(KF_VERSION "5.90.0") # handled by release scripts
-set(KF_DEP_VERSION "5.90.0") # handled by release scripts
+set(KF_VERSION "5.103.0") # handled by release scripts
+set(KF_DEP_VERSION "5.103.0") # handled by release scripts
 project(KMediaPlayer VERSION ${KF_VERSION})
 
 
@@ -9,7 +9,7 @@ project(KMediaPlayer VERSION ${KF_VERSION})
 # CMake stuff from ECM
 #
 include(FeatureSummary)
-find_package(ECM 5.90.0  NO_MODULE)
+find_package(ECM 5.103.0  NO_MODULE)
 set_package_properties(ECM PROPERTIES TYPE REQUIRED DESCRIPTION "Extra CMake Modules." URL "https://commits.kde.org/extra-cmake-modules")
 feature_summary(WHAT REQUIRED_PACKAGES_NOT_FOUND FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
@@ -22,6 +22,7 @@ include(KDECMakeSettings)
 include(GenerateExportHeader)
 include(ECMSetupVersion)
 include(ECMGenerateHeaders)
+include(ECMDeprecationSettings)
 include(CMakePackageConfigHelpers)
 
 
@@ -35,7 +36,7 @@ ecm_setup_version(PROJECT
    SOVERSION 5)
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/kmediaplayer_version.h
-        DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}
+        DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/KMediaPlayer
         COMPONENT Devel)
 
 
@@ -53,8 +54,11 @@ find_package(KF5XmlGui ${KF_DEP_VERSION} REQUIRED)
 #
 # Subdirectories
 #
-add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x050d00)
-add_definitions(-DKF_DISABLE_DEPRECATED_BEFORE_AND_AT=0x055900)
+ecm_set_disabled_deprecation_versions(
+    QT 5.15.2
+    KF 5.95
+)
+
 add_subdirectory(src)
 if (BUILD_TESTING)
     add_subdirectory(autotests)
